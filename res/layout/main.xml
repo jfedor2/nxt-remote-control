@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+
+
+	<LinearLayout android:id="@+id/LinearLayout02"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:gravity="center" android:layout_margin="5dp">
+		<org.jfedor.nxtremotecontrol.SquareImageButton
+			android:id="@+id/button_left" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:layout_gravity="bottom" android:src="@drawable/left_arrow"></org.jfedor.nxtremotecontrol.SquareImageButton>
+		<LinearLayout android:id="@+id/LinearLayout04"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="1" android:orientation="vertical">
+			<org.jfedor.nxtremotecontrol.SquareImageButton
+				android:id="@+id/button_up" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:src="@drawable/up_arrow"></org.jfedor.nxtremotecontrol.SquareImageButton>
+			<org.jfedor.nxtremotecontrol.SquareImageButton
+				android:id="@+id/button_down" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_weight="1"
+				android:src="@drawable/down_arrow"></org.jfedor.nxtremotecontrol.SquareImageButton>
+		</LinearLayout>
+		<org.jfedor.nxtremotecontrol.SquareImageButton
+			android:id="@+id/button_right" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:layout_gravity="bottom" android:src="@drawable/right_arrow"></org.jfedor.nxtremotecontrol.SquareImageButton>
+
+
+	</LinearLayout>
+
+	<LinearLayout android:id="@+id/LinearLayout01"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:layout_weight="2">
+		<TextView android:id="@+id/TextView02" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="Power:"
+			android:textSize="18sp" android:layout_gravity="center_vertical"></TextView>
+		<SeekBar android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:id="@+id/power_seekbar"
+			android:max="100" android:layout_marginLeft="10dp"
+			android:layout_marginRight="10dp" android:layout_gravity="center_vertical"></SeekBar>
+	</LinearLayout>
+
+
+
+	<LinearLayout android:id="@+id/LinearLayout03"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		android:layout_width="fill_parent">
+		<TextView android:layout_width="fill_parent" android:id="@+id/state_display"
+			android:textSize="28sp" android:layout_weight="1" android:text="Not connected"
+			android:gravity="center" android:layout_height="fill_parent"
+			android:textStyle="bold"></TextView>
+
+		<Button android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_gravity="center"
+			android:id="@+id/connect_button" android:text="Connect"
+			android:paddingLeft="20dp" android:paddingRight="20dp"></Button>
+		<Button android:text="Disconnect" android:id="@+id/disconnect_button"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_gravity="center" android:paddingLeft="20dp"
+			android:paddingRight="20dp" android:visibility="gone"></Button>
+
+	</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>

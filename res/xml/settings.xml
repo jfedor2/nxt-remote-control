@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="Basic">
+		<CheckBoxPreference android:key="PREF_SWAP_FWDREV"
+			android:title="Swap forward/reverse"></CheckBoxPreference>
+		<CheckBoxPreference android:key="PREF_SWAP_LEFTRIGHT"
+			android:title="Swap left/right"></CheckBoxPreference>
+	</PreferenceCategory>
+
+<PreferenceCategory android:title="Advanced">
+<CheckBoxPreference android:key="PREF_REG_SPEED" android:title="Regulate speed" android:defaultValue="false" android:disableDependentsState="false">
+</CheckBoxPreference>
+<CheckBoxPreference android:key="PREF_REG_SYNC" android:title="Synchronize motors" android:defaultValue="false" android:dependency="PREF_REG_SPEED">
+</CheckBoxPreference>
+</PreferenceCategory>
+
+</PreferenceScreen>
