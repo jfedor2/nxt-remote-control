@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="horizontal">
+
+<LinearLayout android:id="@+id/LinearLayout05" android:orientation="vertical" android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1"><TextView android:layout_width="fill_parent" android:id="@+id/state_display" android:text="Not connected" android:gravity="center" android:layout_height="wrap_content" android:layout_weight="1" android:textSize="20sp" android:textStyle="bold"></TextView><Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:id="@+id/connect_button" android:text="Connect" android:paddingLeft="20dp" android:paddingRight="20dp"></Button><Button android:text="Disconnect" android:id="@+id/disconnect_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:paddingLeft="20dp" android:paddingRight="20dp" android:visibility="gone"></Button></LinearLayout>
+
+<org.jfedor.nxtremotecontrol.TouchPadView
+		android:id="@+id/touchpad"
+		android:layout_height="fill_parent"
+		android:layout_width="fill_parent" 
+		android:layout_weight="1"></org.jfedor.nxtremotecontrol.TouchPadView>
+
+</LinearLayout>
