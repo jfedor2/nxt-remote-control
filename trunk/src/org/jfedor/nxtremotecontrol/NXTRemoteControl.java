@@ -74,6 +74,7 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
     private static final int MODE_BUTTONS = 1;
     private static final int MODE_TOUCHPAD = 2;
     private static final int MODE_TANK = 3;
+    private static final int MODE_TANK3MOTOR = 4;
     
     private BluetoothAdapter mBluetoothAdapter;
     private PowerManager mPowerManager;
@@ -89,6 +90,7 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
     private Button mDisconnectButton;
     private TouchPadView mTouchPadView;
     private TankView mTankView;
+    private Tank3MotorView mTank3MotorView;
     private Menu mMenu;
     
     private int mPower = 80;
@@ -218,6 +220,52 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
         }
     }
     
+    private class Tank3MotorOnTouchListener implements OnTouchListener {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            Tank3MotorView t3v = (Tank3MotorView) v;
+            float x;
+            float y;
+            int action = event.getAction();
+            if ((action == MotionEvent.ACTION_DOWN) || (action == MotionEvent.ACTION_MOVE)) {
+                byte l = 0;
+                byte r = 0;
+                byte a = 0;
+                for (int i = 0; i < event.getPointerCount(); i++) {
+                    y = -1.0f*(event.getY(i)-t3v.mZero)/t3v.mRange;
+                    if (y > 1.0f) {
+                        y = 1.0f;
+                    }
+                    if (y < -1.0f) {
+                        y = -1.0f;
+                    }
+                    x = event.getX(i);
+                    if (x < t3v.mWidth/3f) {
+                        l = (byte) (y * 100);
+                    } else if (x > 2*t3v.mWidth/3f) {
+                        r = (byte) (y * 100);
+                    } else {
+                        a = (byte) (y * 100);
+                    }
+                }
+                if (mReverse) {
+                    l *= -1;
+                    r *= -1; 
+                    a *= -1;
+                }
+                if (!mReverseLR) {
+                    mNXTTalker.motors3(l, r, a, mRegulateSpeed, mSynchronizeMotors);
+                } else {
+                    mNXTTalker.motors3(r, l, a, mRegulateSpeed, mSynchronizeMotors);
+                }
+            } else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
+                mNXTTalker.motors3((byte) 0, (byte) 0, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+            }
+            return true;
+        }
+    }
+    
     private class TouchpadOnTouchListener implements OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -288,6 +336,7 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
             mMenu.findItem(R.id.menuitem_buttons).setEnabled(disabled != R.id.menuitem_buttons).setVisible(disabled != R.id.menuitem_buttons);
             mMenu.findItem(R.id.menuitem_touchpad).setEnabled(disabled != R.id.menuitem_touchpad).setVisible(disabled != R.id.menuitem_touchpad);
             mMenu.findItem(R.id.menuitem_tank).setEnabled(disabled != R.id.menuitem_tank).setVisible(disabled != R.id.menuitem_tank);
+            mMenu.findItem(R.id.menuitem_tank3motor).setEnabled(disabled != R.id.menuitem_tank3motor).setVisible(disabled != R.id.menuitem_tank3motor);
         }
     }
     
@@ -338,6 +387,14 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
             mTankView = (TankView) findViewById(R.id.tank);
             
             mTankView.setOnTouchListener(new TankOnTouchListener());
+        } else if (mControlsMode == MODE_TANK3MOTOR) {
+            setContentView(R.layout.main_tank3motor);
+            
+            updateMenu(R.id.menuitem_tank3motor);
+            
+            mTank3MotorView = (Tank3MotorView) findViewById(R.id.tank3motor);
+            
+            mTank3MotorView.setOnTouchListener(new Tank3MotorOnTouchListener());
         }
         
         mStateDisplay = (TextView) findViewById(R.id.state_display);
@@ -536,6 +593,10 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
             break;
         case R.id.menuitem_tank:
             mControlsMode = MODE_TANK;
+            setupUI();
+            break;
+        case R.id.menuitem_tank3motor:
+            mControlsMode = MODE_TANK3MOTOR;
             setupUI();
             break;
         case R.id.menuitem_settings:

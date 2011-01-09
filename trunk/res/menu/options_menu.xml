@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-<item android:id="@+id/menuitem_buttons" android:title="Button controls" android:enabled="false" android:visible="false" android:icon="@drawable/ic_menu_buttons"></item>
-<item android:id="@+id/menuitem_touchpad" android:title="Touchpad controls" android:icon="@drawable/ic_menu_touchpad"></item>
-<item android:id="@+id/menuitem_tank" android:title="Tank controls" android:icon="@drawable/ic_menu_tank"></item><item android:id="@+id/menuitem_settings" android:title="Settings" android:icon="@android:drawable/ic_menu_preferences"></item>
+	<item android:id="@+id/menuitem_buttons" android:title="Button controls"
+		android:enabled="false" android:visible="false" android:icon="@drawable/ic_menu_buttons"></item>
+	<item android:id="@+id/menuitem_touchpad" android:title="Touchpad controls"
+		android:icon="@drawable/ic_menu_touchpad"></item>
+	<item android:id="@+id/menuitem_tank" android:title="Tank controls"
+		android:icon="@drawable/ic_menu_tank"></item>
+	<item android:id="@+id/menuitem_tank3motor" android:title="3 motor controls" android:icon="@drawable/ic_menu_tank3motor"></item>
+	<item android:id="@+id/menuitem_settings" android:title="Settings"
+		android:icon="@android:drawable/ic_menu_preferences"></item>
+
 </menu>
