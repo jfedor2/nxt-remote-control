@@ -92,7 +92,7 @@ public class ChooseDeviceActivity extends Activity {
         
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
-                if (device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.TOY_ROBOT) {
+                if ((device.getBluetoothClass() != null) && (device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.TOY_ROBOT)) {
                     mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                     empty = false;
                 }
