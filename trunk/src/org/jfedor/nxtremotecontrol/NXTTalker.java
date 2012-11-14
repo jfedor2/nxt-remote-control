@@ -27,6 +27,7 @@ package org.jfedor.nxtremotecontrol;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -218,19 +219,11 @@ public class NXTTalker {
     }
     
     private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
+        private BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
         
         public ConnectThread(BluetoothDevice device) {
             mmDevice = device;
-            BluetoothSocket tmp = null;
-            
-            try {
-                tmp = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mmSocket = tmp;
         }
         
         public void run() {
@@ -238,15 +231,26 @@ public class NXTTalker {
             mAdapter.cancelDiscovery();
             
             try {
+                mmSocket = mmDevice.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
                 mmSocket.connect();
             } catch (IOException e) {
-                connectionFailed();
+                e.printStackTrace();
                 try {
-                    mmSocket.close();
-                } catch (IOException e1) {
+                    // This is a workaround that reportedly helps on some older devices like HTC Desire, where using
+                    // the standard createRfcommSocketToServiceRecord() method always causes connect() to fail.
+                    Method method = mmDevice.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
+                    mmSocket = (BluetoothSocket) method.invoke(mmDevice, Integer.valueOf(1));
+                    mmSocket.connect();
+                } catch (Exception e1) {
                     e1.printStackTrace();
+                    connectionFailed();
+                    try {
+                        mmSocket.close();
+                    } catch (IOException e2) {
+                        e2.printStackTrace();
+                    }
+                    return;
                 }
-                return;
             }
             
             synchronized (NXTTalker.this) {
@@ -258,7 +262,9 @@ public class NXTTalker {
         
         public void cancel() {
             try {
-                mmSocket.close();
+                if (mmSocket != null) {
+                    mmSocket.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
