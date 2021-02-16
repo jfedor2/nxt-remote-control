@@ -1,0 +1,28 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.2'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+
+// This block encapsulates custom properties and makes them available to all
+// modules in the project.
+ext {
+    // The following are only a few examples of the types of properties you can define.
+    compileSdkVersion = 23
+    // You can also create properties to specify versions for dependencies.
+    // Having consistent versions between modules can avoid conflicts with behavior.
+    supportLibVersion = "23.0.0"
+}
