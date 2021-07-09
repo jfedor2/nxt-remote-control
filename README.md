@@ -20,3 +20,4 @@ If you're interested in the USB/Bluetooth protocol used to control the NXT brick
 - I changed project build to work on Android Studio IDE
 - also added Playstation Dualshock 4 support, its selectable from menu as one of control modes, joystick must be enabled as control device on phone for it to work
 [https://github.com/victorlev01/nxt-remote-control/blob/master/img/dualshock4_view.jpg]
+(https://github.com/victorlev01/nxt-remote-control/blob/master/img/dualshock4_view.jpg)
