@@ -43,6 +43,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -75,6 +76,7 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
     private static final int MODE_TOUCHPAD = 2;
     private static final int MODE_TANK = 3;
     private static final int MODE_TANK3MOTOR = 4;
+    private static final int MODE_DUALSHOCK = 5;
     
     private BluetoothAdapter mBluetoothAdapter;
     private PowerManager mPowerManager;
@@ -91,11 +93,13 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
     private TouchPadView mTouchPadView;
     private TankView mTankView;
     private Tank3MotorView mTank3MotorView;
+    private Dualshock4 dualshock4;
+    private DualshockListener dualshockListener;
     private Menu mMenu;
     
     private int mPower = 80;
-    private int mControlsMode = MODE_BUTTONS;
-    
+    private int mControlsMode = MODE_DUALSHOCK;
+
     private boolean mReverse;
     private boolean mReverseLR;
     private boolean mRegulateSpeed;
@@ -337,6 +341,7 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
             mMenu.findItem(R.id.menuitem_touchpad).setEnabled(disabled != R.id.menuitem_touchpad).setVisible(disabled != R.id.menuitem_touchpad);
             mMenu.findItem(R.id.menuitem_tank).setEnabled(disabled != R.id.menuitem_tank).setVisible(disabled != R.id.menuitem_tank);
             mMenu.findItem(R.id.menuitem_tank3motor).setEnabled(disabled != R.id.menuitem_tank3motor).setVisible(disabled != R.id.menuitem_tank3motor);
+            mMenu.findItem(R.id.menuitem_dualshock).setEnabled(disabled != R.id.menuitem_dualshock).setVisible(disabled != R.id.menuitem_dualshock);
         }
     }
     
@@ -396,7 +401,17 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
             
             mTank3MotorView.setOnTouchListener(new Tank3MotorOnTouchListener());
         }
-        
+        else if (mControlsMode == MODE_DUALSHOCK) {
+            setContentView(R.layout.main_dualshock);
+
+            updateMenu(R.id.menuitem_dualshock);
+
+            dualshock4 = (Dualshock4) findViewById(R.id.dualshock);
+            this.dualshockListener = new DualshockListener();
+            this.dualshockListener.setmNXTTalker(mNXTTalker);
+        }
+
+
         mStateDisplay = (TextView) findViewById(R.id.state_display);
 
         mConnectButton = (Button) findViewById(R.id.connect_button);
@@ -599,6 +614,10 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
             mControlsMode = MODE_TANK3MOTOR;
             setupUI();
             break;
+       case R.id.menuitem_dualshock:
+            mControlsMode = MODE_DUALSHOCK;
+            setupUI();
+            break;
         case R.id.menuitem_settings:
             Intent i = new Intent(this, SettingsActivity.class);
             startActivityForResult(i, REQUEST_SETTINGS);
@@ -635,5 +654,35 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
         } else if (key.equals("PREF_REG_SYNC")) {
             mSynchronizeMotors = prefs.getBoolean("PREF_REG_SYNC", false);
         }
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        this.dualshockListener.setmNXTTalker(mNXTTalker);
+        if(mControlsMode == MODE_DUALSHOCK){
+            dualshockListener.onKeyDown(keyCode, event);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        this.dualshockListener.setmNXTTalker(mNXTTalker);
+        if(mControlsMode == MODE_DUALSHOCK){
+            dualshockListener.onKeyUp(keyCode, event);
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        this.dualshockListener.setmNXTTalker(mNXTTalker);
+        if(mControlsMode == MODE_DUALSHOCK){
+            // Check if this event if from a D-pad and process accordingly.
+
+            dualshockListener.handleEvent(event);
+        }
+        return super.onGenericMotionEvent(event);
     }
 }

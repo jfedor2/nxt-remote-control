@@ -14,3 +14,9 @@ And two screenshots:
 Feel free to contact me at `jfedor@jfedor.org` if you have any questions or comments.
 
 If you're interested in the USB/Bluetooth protocol used to control the NXT brick, you can download the documentation from the [Lego Mindstorms site](http://www.lego.com/mindstorms/downloads). By the way, Lego's own Android application, [MINDdroid](https://play.google.com/store/apps/details?id=com.lego.minddroid), is also [open source](https://github.com/NXT/LEGO-MINDSTORMS-MINDdroid)
+
+
+## My changes
+- I changed project build to work on Android Studio IDE
+- also added Playstation Dualshock 4 support, its selectable from menu as one of control modes, joystick must be enabled as control device on phone for it to work
+![Dualshock 4 Mode](https://github.com/victorlev01/nxt-remote-control/blob/master/img/dualshock4_view.jpg)
