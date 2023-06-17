@@ -30,6 +30,7 @@ package org.jfedor.nxtremotecontrol;
  * tilt controls
  */
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -37,12 +38,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,6 +72,8 @@ public class NXTRemoteControl extends AppCompatActivity implements OnSharedPrefe
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_CONNECT_DEVICE = 2;
     private static final int REQUEST_SETTINGS = 3;
+
+    private static final int REQUEST_PERMISSIONS_BLUETOOTH = 1;
     
     public static final int MESSAGE_TOAST = 1;
     public static final int MESSAGE_STATE_CHANGE = 2;
@@ -440,6 +448,58 @@ public class NXTRemoteControl extends AppCompatActivity implements OnSharedPrefe
     protected void onStart() {
         super.onStart();
         //Log.i("NXT", "NXTRemoteControl.onStart()");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if ((ContextCompat.checkSelfPermission(getApplicationContext(),
+                    Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED)
+                    &&
+                    (ContextCompat.checkSelfPermission(getApplicationContext(),
+                            Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)) {
+                startBluetooth();
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_SCAN)
+                    || shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_CONNECT)) {
+                new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setMessage("In order to use Bluetooth, you have to grant this app the necessary permissions.")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            requestBluetoothPermissions();
+                        }).show();
+            } else {
+                requestBluetoothPermissions();
+            }
+        }
+    }
+
+    void requestBluetoothPermissions() {
+        requestPermissions(new String[]{
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT
+        }, REQUEST_PERMISSIONS_BLUETOOTH);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSIONS_BLUETOOTH) {
+            boolean allGranted = true;
+            for (int granted : grantResults) {
+                if (granted != PackageManager.PERMISSION_GRANTED) {
+                    allGranted = false;
+                    break;
+                }
+            }
+            if (grantResults.length > 0 && allGranted) {
+                startBluetooth();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setMessage("You cannot use this app unless you grant it the necessary Bluetooth permissions. If you're seeing this message and the app didn't even request the permissions, you'll have to grant them in system settings, or uninstall and reinstall the app.")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            NXTRemoteControl.this.finish();
+                        }).show();
+            }
+        }
+    }
+
+    void startBluetooth() {
         if (!NO_BT) {
             if (!mBluetoothAdapter.isEnabled()) {
                 Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
