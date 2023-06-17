@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "org.jfedor.nxtremotecontrol"
-    compileSdkVersion 8
+    compileSdk 33
     buildToolsVersion "34.0.0"
 
     defaultConfig {
         applicationId "org.jfedor.nxtremotecontrol"
         minSdkVersion 7
-        targetSdkVersion 16
+        targetSdk 33
     }
 
     buildTypes {
