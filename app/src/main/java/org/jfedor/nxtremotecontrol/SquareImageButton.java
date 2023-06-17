@@ -17,10 +17,10 @@
 package org.jfedor.nxtremotecontrol;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
-import android.widget.ImageButton;
 
-public class SquareImageButton extends ImageButton {
+public class SquareImageButton extends AppCompatImageButton {
 
     public SquareImageButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);

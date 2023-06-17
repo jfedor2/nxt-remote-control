@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "org.jfedor.nxtremotecontrol"
-        minSdkVersion 7
+        minSdk 14
         targetSdk 33
     }
 
@@ -17,4 +17,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+}
+
+dependencies {
+    implementation 'com.android.support:appcompat-v7:28.0.0'
 }

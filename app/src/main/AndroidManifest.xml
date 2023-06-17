@@ -16,7 +16,8 @@
             android:name=".NXTRemoteControl"
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,11 +28,11 @@
             android:name=".ChooseDeviceActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="Select device"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/Theme.AppCompat.Dialog" />
 
         <activity
             android:name=".SettingsActivity"
             android:label="Settings"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/Theme.AppCompat.Dialog" />
     </application>
 </manifest>
