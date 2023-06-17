@@ -582,29 +582,24 @@ public class NXTRemoteControl extends Activity implements OnSharedPreferenceChan
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case R.id.menuitem_buttons:
+        int itemId = item.getItemId();
+        if (itemId == R.id.menuitem_buttons) {
             mControlsMode = MODE_BUTTONS;
             setupUI();
-            break;
-        case R.id.menuitem_touchpad:
+        } else if (itemId == R.id.menuitem_touchpad) {
             mControlsMode = MODE_TOUCHPAD;
             setupUI();
-            break;
-        case R.id.menuitem_tank:
+        } else if (itemId == R.id.menuitem_tank) {
             mControlsMode = MODE_TANK;
             setupUI();
-            break;
-        case R.id.menuitem_tank3motor:
+        } else if (itemId == R.id.menuitem_tank3motor) {
             mControlsMode = MODE_TANK3MOTOR;
             setupUI();
-            break;
-        case R.id.menuitem_settings:
+        } else if (itemId == R.id.menuitem_settings) {
             Intent i = new Intent(this, SettingsActivity.class);
             startActivityForResult(i, REQUEST_SETTINGS);
-            break;
-        default:
-            return false;    
+        } else {
+            return false;
         }
         return true;
     }
