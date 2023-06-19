@@ -466,6 +466,8 @@ public class NXTRemoteControl extends AppCompatActivity implements OnSharedPrefe
             } else {
                 requestBluetoothPermissions();
             }
+        } else {
+            startBluetooth();
         }
     }
 
