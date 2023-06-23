@@ -24,6 +24,7 @@
 
 package org.jfedor.nxtremotecontrol;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
@@ -32,7 +33,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,6 +55,7 @@ import java.util.Set;
 public class ChooseDeviceActivity extends AppCompatActivity {
     
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
+    private static final int REQUEST_PERMISSIONS_LOCATION = 2;
     
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
@@ -110,13 +117,65 @@ public class ChooseDeviceActivity extends AppCompatActivity {
         super.onDestroy();
         
         if (mBtAdapter != null) {
-            mBtAdapter.cancelDiscovery();
+            try {
+                mBtAdapter.cancelDiscovery();
+            } catch (SecurityException e) {
+            }
         }
         
         this.unregisterReceiver(mReceiver);
     }
 
     private void doDiscovery() {
+        if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)) {
+            reallyDoDiscovery();
+        } else {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                reallyDoDiscovery();
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setMessage("In order to scan for devices, you have to grant this app location access.")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            requestLocationPermissions();
+                        }).show();
+            } else {
+                requestLocationPermissions();
+            }
+        }
+    }
+
+    void requestLocationPermissions() {
+        requestPermissions(new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION
+        }, REQUEST_PERMISSIONS_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSIONS_LOCATION) {
+            boolean allGranted = true;
+            for (int granted : grantResults) {
+                if (granted != PackageManager.PERMISSION_GRANTED) {
+                    allGranted = false;
+                    break;
+                }
+            }
+            if (grantResults.length > 0 && allGranted) {
+                reallyDoDiscovery();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setMessage("To scan for devices, you have to grant this app location access. If you don't want to do that, you can pair your NXT brick in system settings. If you're seeing this message and the app didn't even request location access, you'll have to grant it in system settings, or uninstall and reinstall the app.")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                        }).show();
+            }
+        }
+    }
+
+    private void reallyDoDiscovery() {
         setProgressBarIndeterminateVisibility(true);
         setTitle("Scanning...");
         
@@ -137,7 +196,10 @@ public class ChooseDeviceActivity extends AppCompatActivity {
 
     private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
-            mBtAdapter.cancelDiscovery();
+            try {
+                mBtAdapter.cancelDiscovery();
+            } catch (SecurityException e) {
+            }
             
             String info = ((TextView) v).getText().toString();
             String address = info.substring(info.length() - 17);
