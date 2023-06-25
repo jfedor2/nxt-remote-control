@@ -44,6 +44,6 @@
         <activity
             android:name=".SettingsActivity"
             android:label="Settings"
-            android:theme="@style/Theme.AppCompat.Dialog" />
+            android:theme="@android:style/Theme.Dialog" />
     </application>
 </manifest>
