@@ -447,7 +447,25 @@ public class NXTRemoteControl extends AppCompatActivity implements OnSharedPrefe
             }
         });
 */
-        
+
+        View contentRootView = findViewById(android.R.id.content);
+
+        ViewGroupCompat.installCompatInsetsDispatch(contentRootView);
+
+        ViewCompat.setOnApplyWindowInsetsListener(contentRootView, (v, insets) -> {
+            Insets systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars()
+                    | WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(
+                    systemBarsInsets.left,
+                    systemBarsInsets.top,
+                    systemBarsInsets.right,
+                    systemBarsInsets.bottom
+            );
+            return WindowInsetsCompat.CONSUMED;
+        });
+
+        ViewCompat.requestApplyInsets(contentRootView);
+
         displayState();
     }
 
