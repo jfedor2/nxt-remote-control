@@ -30,6 +30,8 @@ package org.jfedor.nxtremotecontrol;
  * tilt controls
  */
 
+import static androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale;
+
 import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -46,10 +48,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,6 +62,15 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.ViewGroupCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public class NXTRemoteControl extends AppCompatActivity implements OnSharedPreferenceChangeListener {
     
@@ -480,6 +487,7 @@ public class NXTRemoteControl extends AppCompatActivity implements OnSharedPrefe
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSIONS_BLUETOOTH) {
             boolean allGranted = true;
             for (int granted : grantResults) {
@@ -527,6 +535,7 @@ public class NXTRemoteControl extends AppCompatActivity implements OnSharedPrefe
   
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
         case REQUEST_ENABLE_BT:
             if (resultCode == Activity.RESULT_OK) {

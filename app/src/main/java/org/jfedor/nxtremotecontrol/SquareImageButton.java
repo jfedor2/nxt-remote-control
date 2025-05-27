@@ -17,8 +17,9 @@
 package org.jfedor.nxtremotecontrol;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatImageButton;
 
 public class SquareImageButton extends AppCompatImageButton {
 
